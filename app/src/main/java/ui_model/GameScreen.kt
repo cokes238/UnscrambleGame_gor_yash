@@ -32,6 +32,8 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.TextButton
 
 @Composable
 fun GameScreen(
@@ -53,14 +55,24 @@ fun GameScreen(
             fontSize = 32.sp
         )
         GameStatus(
-            wordCount= gameUiState.currentWordCount,
+            wordCount = gameUiState.currentWordCount,
             score = gameUiState.score
         )
         GameLayout(
             currentScrambledWord = gameUiState.currentScrambledWord,
-            onUserGuessChanged = { }, // TODO: добавим позже
-            onKeyboardDone = { } // TODO: добавим позже
+            userGuess = gameViewModel.userGuess, // добавили
+            onUserGuessChanged = { gameViewModel.updateUserGuess(it) }, // добавили
+            onKeyboardDone = { gameViewModel.checkUserGuess() }, // добавили
+            isGuessWrong = gameUiState.isGuessedWordWrong, // добавили
+            onSubmitClicked = { gameViewModel.checkUserGuess() }, // добавили
+            onSkipClicked = { gameViewModel.skipWord() } // добавили
         )
+        if (gameUiState.isGameOver) {
+            FinalScoreDialog(
+                score = gameUiState.score,
+                onPlayAgain = { gameViewModel.resetGame() }
+            )
+        }
     }
 }
 
@@ -100,8 +112,12 @@ fun GameStatus(
 @Composable
 fun GameLayout(
     currentScrambledWord: String,
+    userGuess: String,
     onUserGuessChanged: (String) -> Unit,
     onKeyboardDone: () -> Unit,
+    isGuessWrong: Boolean,
+    onSubmitClicked: () -> Unit,
+    onSkipClicked: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     var userGuess by remember { mutableStateOf("") }
@@ -142,6 +158,7 @@ fun GameLayout(
             singleLine = true,
             modifier = Modifier.fillMaxWidth(),
             label = { Text("Введите слово") },
+            isError = isGuessWrong,
             keyboardOptions = KeyboardOptions.Default.copy(
                 imeAction = ImeAction.Done
             ),
@@ -149,8 +166,15 @@ fun GameLayout(
                 onDone = { onKeyboardDone() }
             )
         )
+        if (isGuessWrong) {
+            Text(
+                text = "Неправильно! Попробуйте ещё раз",
+                color = MaterialTheme.colorScheme.error,
+                style = MaterialTheme.typography.bodyMedium
+            )
+        }
         Button(
-            onClick = { /* TODO */ },
+            onClick = onSubmitClicked,
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(
@@ -159,7 +183,7 @@ fun GameLayout(
             )
         }
         OutlinedButton(
-            onClick = {/* TODO */ },
+            onClick = onSkipClicked,
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(
@@ -169,5 +193,35 @@ fun GameLayout(
         }
     }
 }
+
+@Composable
+fun FinalScoreDialog(
+    score: Int,
+    onPlayAgain: () -> Unit,
+    modifier: Modifier = Modifier)
+    {
+        AlertDialog(
+            onDismissRequest = {
+            },
+            title = { Text(text = "Поздравляем!") },
+            text = {
+                Column {
+                    Text(text = "Вы набрали: ")
+                    Text(
+                        text = "$score очков",
+                        style = MaterialTheme.typography.displaySmall,
+                        fontSize = 36.sp
+                    )
+                }
+            },
+            modifier = modifier,
+            dismissButton = {},
+            confirmButton = {
+                TextButton(onClick = onPlayAgain) {
+                    Text(text = "Играть снова")
+                }
+            }
+        )
+    }
 
 
