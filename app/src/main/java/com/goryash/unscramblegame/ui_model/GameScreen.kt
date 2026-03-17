@@ -1,4 +1,4 @@
-package ui_model
+package com.goryash.unscramblegame.ui_model
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -23,7 +23,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.getValue
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material3.OutlinedTextField
@@ -34,6 +33,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.TextButton
+import com.goryash.unscramblegame.data.MAX_NO_OF_WORDS
 
 @Composable
 fun GameScreen(
@@ -96,8 +96,7 @@ fun GameStatus(
         ) {
             Text(
                 text = "Слово $wordCount из ${
-                    com.goryash.unscramblegame.data
-                        .MAX_NO_OF_WORDS
+                    MAX_NO_OF_WORDS
                 }",
                 style = MaterialTheme.typography.titleMedium
             )

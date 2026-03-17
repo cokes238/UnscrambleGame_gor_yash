@@ -12,7 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.goryash.unscramblegame.ui.theme.UnscrambleGameTheme
-import ui_model.GameScreen
+import com.goryash.unscramblegame.ui_model.GameScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

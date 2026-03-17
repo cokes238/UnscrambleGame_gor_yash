@@ -1,4 +1,4 @@
-package ui_model
+package com.goryash.unscramblegame.ui_model
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
